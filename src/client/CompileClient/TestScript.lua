@@ -2,7 +2,7 @@ local ClientCompileT = require(game.ReplicatedFirst.ClientStructs.ClientCompileT
 
 return function(env)
     local ReturnData: ClientCompileT.ClientCompiledScript = {
-        Name = script.Parent;
+        Name = script.Name;
         Description = "Test Script; Most likely unused.";
         Version = "0.0.1";
     }

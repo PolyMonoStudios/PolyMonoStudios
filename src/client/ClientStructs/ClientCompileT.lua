@@ -5,6 +5,7 @@ local ScriptData: ClientStructs.TypeScript = {
 }
 
 export type ClientCompiler = {
+    Fart: () -> ();
     [string]: ClientCompiledScript;
 }
 

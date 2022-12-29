@@ -1,6 +1,6 @@
 local HttpService = game:GetService("HttpService")
 
-local Console = shared.CLIENTAPI.console
+local Console = shared.CLIENTAPI.include("console")
 
 local module = {}
 module.__index = module

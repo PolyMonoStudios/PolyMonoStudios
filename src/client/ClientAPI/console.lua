@@ -1,6 +1,8 @@
+local GlobalTypes = require(game.ReplicatedFirst.ClientClasses.ClientApiT)
+
 local Debris = game:GetService("Debris")
 
-local Assertion = shared.CLIENTAPI.assertion
+local Assertion = shared.CLIENTAPI.include("assertion")
 
 local ConsoleUI: ScreenGui = game.Players.LocalPlayer.PlayerGui:WaitForChild("ConsoleGUI")
 local OutputFrame: Frame = ConsoleUI:WaitForChild("Frame")
@@ -14,16 +16,11 @@ local Icons = {
     [Enum.MessageType.MessageWarning] = "rbxassetid://11857000103"
 }
 
-export type ConsoleFormatOptions = {
-    Color: Color3?;
-    IconType: Enum.MessageType?;
-}
-
 local DefaultConsoleFormatColor = Color3.new(1,1,1)
 
 local module = {}
 
-function module.message(msg: string, formatOptions: ConsoleFormatOptions)
+function module.message(msg: string, formatOptions: GlobalTypes.ConsoleFormatOptions)
     formatOptions = formatOptions or {}
     local Color = formatOptions.Color or DefaultConsoleFormatColor
     local IconType = formatOptions.IconType or Enum.MessageType.MessageOutput
@@ -39,7 +36,7 @@ function module.log(...)
     local message = "[CONSOLE.LOG]: "..tostring(tuple[1])
     if #tuple > 1 then
         for i = 2,#tuple do
-            message = message .. " " .. tuple[i]
+            message = message .. " << " .. tuple[i]
         end
     end
     print(message)

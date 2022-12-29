@@ -58,20 +58,39 @@ local assert = SharedAPICompiled.assertion
 
 local console = assert.new(SharedAPICompiled.console):cNil():FinalizeRaise()
 if CompileConfig.VerboseCompiling then
-    console.log("Loaded CLIENTAPI Folder, Now loading CompileClient folder...")
+    console.log("Loaded CLIENTAPI Folder, Now loading ENV Functions...")
+end
+
+function Environment.include(Name)
+    local Module = Environment[Name]
+    if Module then
+        return Module
+    else
+        local ConsoleQuick = SharedAPICompiled.console
+        assert(ConsoleQuick, "Missing console.lua!!! Check directory game.ReplicatedFirst.ClientAPI.console to see if the module exists.")
+        ConsoleQuick.error("Missing Module!!!\nModule '"..Name..".lua' could not be found in game.ReplicatedFirst.ClientAPI", 4)
+    end 
+end
+
+if CompileConfig.VerboseCompiling then
+    console.log("Loaded ENV Functions, Now compiling CompileClient folder...")
 end
 
 for _, ToCompile: ModuleScript in pairs(CompileClient:GetChildren()) do
-    local Data: ClientCompileT.ClientCompileFunction = require(ToCompile)
-    Loading[#Loading+1] = Data
+    local CompileData = require(ToCompile)
+    local CompiledData: ClientCompileT.ClientCompiledScript = CompileData(Environment)
+    console.log(table.concat(CompiledData, ", "))
+    console.log(typeof(CompileData))
+    if CompileConfig.VerboseCompiling then
+        console.log("Loaded '"..CompiledData.Name.."'")
+    end
     ToCompile:Destroy()
 end
 
-for _,CompileData: ClientCompileT.ClientCompileFunction in pairs(Loading) do
-    local CompiledData: ClientCompileT.ClientCompiledScript = CompileData(Environment)
-    console.log("Loaded '"..CompiledData.Name.."'")
-end
-
 CompileClient:Destroy()
+
+if CompileConfig.VerboseCompiling then
+    console.log("Compiled scripts. All is ready.")
+end
 
 table.freeze(shared.CLIENTAPI)
